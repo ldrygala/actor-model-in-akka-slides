@@ -1,2 +1,2 @@
-# actor-model-slides
-slides about actor model and akka
+# actor-model-in-akka-slides
+slides about actor model in akka
