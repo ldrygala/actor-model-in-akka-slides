@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+
+    <title>Actor Model in Akka</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/beige.css" id="theme">
+
+    <!-- Code syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <!-- Printing and PDF exports -->
+    <script>
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+    </script>
+
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+    <div class="reveal">
+
+      <div class="slides">
+        <section class="intro" data-transition="zoom">
+          <h1>Actor Model in <a href="http://akka.io/"><img src="images/akka_logo.png" style="border:none; box-shadow:none;"></a></h1>
+          <h2>Łukasz Drygała</h2>
+        </section>
+
+        <section>
+          <img src="images/akka_logo.png" style="border:none; box-shadow:none;">
+          <ul>
+            <li>toolkit for building highly concurrent, distributed, and fault-tolerant event-driven applications</li>
+            <li>can be used with both Java and Scala</li>
+            <li>most powerful features of Akka is its Actor Model of concurrency</li>
+          </ul>
+        </section>
+        <section>
+          <h1>Actor Model</h1>
+          <ul>
+            <li>defined in the 1963 paper by Carl Hewitt <small>popularized by the Erlang language</small><small>Ericsson build highly concurrent and extremely reliable (99.9999999 % availability – 31 ms/year downtime) telecom systems based on actor model</small></li>
+            <li>actors encapsulate the behavior and state</li>
+            <li>actors never interact directly with each other<small>communicate via messages</small></li>
+          </ul>
+        </section>
+        <section>
+          <h1>Actor in Akka</h1>
+          <ul>
+            <li>high performance <small>50 million msg/sec on single machine</small></li>
+            <li>extremely lightweight <small>~2.5 million actors per GB of heap</small></li>
+            <li>distributed by default</li>
+            <li>share nothing</li>
+            <li>process a single message at a time</li>
+          </ul>
+        </section>
+        <section>
+          <h1>Massage</h1>
+          <ul>
+            <li>should have good name and rich semantic and domain specific meaning</li>
+            <li>must be immutable</li>
+          </ul>
+        </section>
+        <section>
+          <h1>Our messages</h1>
+          <ul>
+            <li><code>WhoToGreet</code> - redefines the new greeting</li>
+            <li><code>Greet </code> - asks the Actor for latest greeting</li>
+            <li><code>Greeting</code> - returns the latest greeting</li>
+          </ul>
+        </section>
+        <section>
+          <h1>Messages in Java</h1>
+          <pre><code data-trim class="java">
+public static class Greet implements Serializable {}
+
+public static class WhoToGreet implements Serializable {
+    public final String who;
+    public WhoToGreet(String who) {
+        this.who = who;
+    }
+}
+
+public static class Greeting implements Serializable {
+    public final String message;
+    public Greeting(String message) {
+        this.message = message;
+    }
+}
+          </code></pre>
+        </section>
+        <section>
+          <h1>Messages in Scala</h1>
+          <pre><code data-trim class="scala">
+case object Greet
+case class WhoToGreet(who: String)
+case class Greeting(message: String)
+          </code></pre>
+        </section>
+        <section>
+          <h1>Actor in Java</h1>
+          <ul>
+            <li>extends <code>UntypedActor</code></li>
+            <li>implement <code>onReceive</code> method</li>
+          </ul>
+          <pre><code data-trim class="java">
+public static class Greeter extends UntypedActor {
+    String greeting = "";
+
+    public void onReceive(Object message) {
+        if (message instanceof WhoToGreet)
+            greeting = "hello, " + ((WhoToGreet) message).who;
+
+        else if (message instanceof Greet)
+            getSender().tell(new Greeting(greeting), getSelf());
+
+        else unhandled(message);
+    }
+}
+          </code></pre>
+        </section>
+        <section>
+          <h1>Actor in Scala</h1>
+          <ul>
+            <li>extends <code>Actor</code></li>
+            <li>implement <code>receive</code> method</li>
+          </ul>
+          <pre><code data-trim class="scala">
+class Greeter extends Actor {
+  var greeting = ""
+
+  def receive = {
+    case WhoToGreet(who) => greeting = s"hello, $who"
+    case Greet           => sender ! Greeting(greeting)
+  }
+}
+          </code></pre>
+        </section>
+        <section>
+          <h1>Create Actor</h1>
+          <ul>
+            <li>can't create instance of Actor using <code>new</code></li>
+            <li>create Actor using <code>ActorSystem.actorOf</code> factory method<small>it return ActorRef pointing to Actor instance</small></li>
+            <li>factory method takes: 
+              <p><code>Props</code><small>configuration object</small></p> 
+              <p>Name <small>which must be uniqe in <code>ActorSystem</code></small></p>
+            </li>
+            <li><code>ActorSystem</code> acts as container for Actors, managing their life-cycles</li>
+          </ul>
+        </section>
+        <section>
+          <p>Java</p>
+          <pre><code data-trim class="java">
+ActorSystem system = ActorSystem.create("system");
+ActorRef greeter = system.actorOf(Props.create(Greeter.class), "greeter");
+          </code></pre>
+          <p>Scala</p>
+          <pre><code data-trim class="scala">
+val system = ActorSystem("system")
+val greeter = system.actorOf(Props[Greeter], "greeter")
+          </code></pre>
+        </section>
+        <section>
+          <h1>Send Message to Actor</h1>
+          <ul>
+            <li>pass message into <code>tell</code> method on <code>ActorRef</code><small>this put message on the actor's mailbox</small></li>
+            <li>actor's mailbox is essentially a message queue <small>ordering of multiple messages sent from the same Actor is preserved</small></li>
+          </ul>
+        </section>
+        <section>
+          <p>Java</p>
+          <pre><code data-trim class="java">
+greeter.tell(new WhoToGreet("akka"), ActorRef.noSender());
+          </code></pre>
+          <p>Scala</p>
+          <pre><code data-trim class="scala">
+greeter.tell(WhoToGreet("akka"), ActorRef.noSender)
+// or
+greeter ! WhoToGreet("akka")
+          </code></pre>
+        </section>
+        <section>
+          <h1>Replying to an Actor</h1> 
+          <ul>
+            <li>request-replay style of communication</li>
+            <li>we need reference to sender</li>
+            <li>add reference of yourself as part of the message <small>directly supported by Akka</small></li>
+            <li>put reference to yourself in constructor</li>
+          </ul>
+        </section>
+        <section>
+          <h1>The 'self' reference</h1>
+          <p>reference to your own <code>ActorRef</code></p>
+          <p>Java</p>
+          <pre><code data-trim class="java">
+// From within an Actor
+greeter.tell(new Greet(), getSelf());
+          </code></pre>
+          <p>Scala</p>
+          <pre><code data-trim class="scala">
+// From within an Actor
+greeter.tell(Greet, self());
+// Or
+greeter ! Greet
+          </code></pre>
+        </section>
+        <section>
+          <h1>The 'sender' reference</h1>
+          <ul>
+            <li>will be available in the receiver Actor when it's processing the message</li>
+            <li>each message is paired with its unique sender reference</li>
+            <li>the "current" sender reference will change with each new message you process</li>
+          </ul>
+          <p>Java</p>
+          <pre><code data-trim class="java">
+            // From within the Greeter Actor
+getSender().tell(new Greeting(greeting), getSelf());
+          </code></pre>
+          <p>Scala</p>
+          <pre><code data-trim class="scala">
+// From within the Greeter Actor
+sender() ! Greeting(greeting)
+          </code></pre>
+        </section>
+        <section>
+          <h1>Inbox</h1>
+          <ul>
+            <li>allows you to create an "actor-in-a-box" <small>contains an Actor which can be used as a puppet for sending messages to other Actors and receiving their replies</small></li>
+            <li>create an <code>Inbox</code> using <code>Inbox.create</code></li>
+            <li>send messages using <code>inbox.send</code></li>
+            <li>internal Actor will just put any message it receives into a queue</li>
+            <li>messages can be retrieved by calling <code>inbox.receive</code> <small>if the queue is empty then that call will block until a message becomes available</small></li>
+          </ul>
+        </section>
+        <section>
+          <h1>Inbox in Java</h1>
+          <pre><code data-trim class="java">
+// Create an "actor-in-a-box"
+final Inbox inbox = Inbox.create(system);
+
+// Tell the 'greeter' to change its 'greeting' message
+greeter.tell(new WhoToGreet("akka"), ActorRef.noSender());
+
+// Ask the 'greeter for the latest 'greeting'
+// Reply should go to the mailbox
+inbox.send(greeter, new Greet());
+
+// Wait 5 seconds for the reply with the 'greeting' message
+Greeting greeting = (Greeting) inbox.receive(Duration.create(5, "seconds"));
+System.out.println("Greeting: " + greeting.message);</code></pre>
+        </section>
+        <section>
+          <h1>Inbox in Scala</h1>
+          <pre><code data-trim class="scala">
+// Create an "actor-in-a-box"
+val inbox = Inbox.create(system)
+
+// Tell the 'greeter' to change its 'greeting' message
+greeter ! WhoToGreet("akka")
+
+// Ask the 'greeter for the latest 'greeting'
+// Reply should go to the mailbox
+inbox.send(greeter, Greet)
+
+// Wait 5 seconds for the reply with the 'greeting' message
+val Greeting(message) = inbox.receive(5.seconds)
+println(s"Greeting: $message")
+          </code></pre>
+        </section>
+        <section>
+          <h1>What next ?</h1>
+          <ul>
+            <li>Akka Streams</li>
+            <li>Akka Http</li>
+            <li>Akka Persistence</li>
+            <li>Actor Testing</li>
+          </ul>
+        </section>
+        <section data-background-image="images/end.jpg">
+        </section>
+        <section>
+          <h1>Based on</h1>
+          <ul>
+            <li>http://www.typesafe.com/activator/template/hello-akka</li>
+            <li>http://akka.io</li>
+            <li>Akka in Action</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.js"></script>
+
+    <script>
+
+        // Full list of configuration options available at:
+        // https://github.com/hakimel/reveal.js#configuration
+        Reveal.initialize({
+            controls: true,
+            progress: true,
+            history: true,
+            center: true,
+
+            transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+            // Optional reveal.js plugins
+            dependencies: [
+                { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                { src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+                { src: 'plugin/zoom-js/zoom.js', async: true },
+                { src: 'plugin/notes/notes.js', async: true }
+            ]
+        });
+
+    </script>
+  </body>
+</html>
