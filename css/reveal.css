@@ -1173,3 +1173,9 @@ body {
 
 .zoomed .reveal .roll span:after {
   visibility: hidden; }
+
+#box {
+  border:solid; 
+  border-radius:25px; 
+  padding:20px;
+}

@@ -29,16 +29,74 @@
     <script src="lib/js/html5shiv.js"></script>
     <![endif]-->
   </head>
-
   <body>
     <div class="reveal">
 
       <div class="slides">
         <section class="intro" data-transition="zoom">
           <h1>Actor Model in <a href="http://akka.io/"><img src="images/akka_logo.png" style="border:none; box-shadow:none;"></a></h1>
+          <h2>Robert Buchalski</h2>
           <h2>Łukasz Drygała</h2>
         </section>
-
+        <section>
+          <h2>Concurrency is applied in almost all business areas</h2>
+        </section>
+        <section>
+          <h2>Technical Areas</h2>
+          <div id="box">
+            <ul>
+              <li>scale out (scale horizontally) - more nodes to a system, such as adding a new computer to a distributed software application</li>
+              <li>scale up (scale vertically) - add resources to a single node in a system, typically involving the addition of CPUs or memory to a single computer</li>
+              <li>fault tolerance / SLA</li>
+            </ul>
+          </div>
+        </section>
+        <section>
+          <h2>Business Areas</h2>
+          <div id="box">
+            <ul>
+              <li>Transaction processing (Online Gaming, Finance/Banking, Trading, Statistics, Searching, Social Meida, Telecom)</li>
+              <li>Communication Hub (Telecom, Web Media)</li>
+              <li>Business Intelligence / Data Mining</li>
+            </ul>
+          </div>
+        </section>
+        <section>
+          <h2>Concurrency is applied everywhere, where groups of people perform information transformation</h2>
+          <img src="images/concurrency_everywhere.jpg" style="border:none; box-shadow:none;">
+        </section>
+        <section>
+          <h2>Sample problems (solved by Akka)</h2>
+          <img src="images/problems.png" style="border:none; box-shadow:none;">
+        </section>
+        <section>
+          <h2>The problems can be transformed into parallel form in multiple form</h2>
+          <ul>
+            <li>functional decomposition</li>
+            <ul>
+              <li>like division problems using WBS &amp; OBS</li>
+            </ul>
+            <li>data parallelism</li>
+            <ul>
+              <li>each problems  that are recursive (mathematical induction)</li>
+              <li>divide and conquere</li>
+              <li>sample problems: compression, sorting</li>
+            </ul>
+            <li>task parallelism</li>
+            <ul>
+              <li>regular parallelism (subtask are same)</li>
+              <li>irregular parallelism</li>
+            </ul>
+          </ul>
+        </section>
+        <section>
+          <h2>Work Breakdown Structure decomposites project into lower level, Organisational Breakdown Structure assign tasks to employees</h2>
+          <img src="images/wbs-obs.gif" style="border:none; box-shadow:none;">
+        </section>
+        <section>
+          <h2>Concurrency Techniques in practice</h2>
+          <img src="images/mindmap.png" style="border:none; box-shadow:none;">
+        </section>
         <section>
           <img src="images/akka_logo.png" style="border:none; box-shadow:none;">
           <ul>
@@ -48,32 +106,33 @@
           </ul>
         </section>
         <section>
-          <h1>Actor Model</h1>
-          <ul>
-            <li>defined in the 1963 paper by Carl Hewitt <small>popularized by the Erlang language</small><small>Ericsson build highly concurrent and extremely reliable (99.9999999 % availability – 31 ms/year downtime) telecom systems based on actor model</small></li>
-            <li>actors encapsulate the behavior and state</li>
-            <li>actors never interact directly with each other<small>communicate via messages</small></li>
-          </ul>
+          <h2>Actor Model</h2>
+            <ul>
+              <li>defined in the 1963 paper by Carl Hewitt <small>popularized by the Erlang language</small><small>Ericsson build highly concurrent and extremely reliable (99.9999999 % availability – 31 ms/year downtime) telecom systems based on actor model</small></li>
+            </ul>
         </section>
         <section>
-          <h1>Actor in Akka</h1>
+          <h2>Actor in Akka</h2>
           <ul>
-            <li>high performance <small>50 million msg/sec on single machine</small></li>
-            <li>extremely lightweight <small>~2.5 million actors per GB of heap</small></li>
-            <li>distributed by default</li>
+            <li>encapsulate the behavior and state</li>
+            <li>are location transparent &amp; distributable</li>
+            <li>never interact directly with each other<small>communicate via messages</small></li>
             <li>share nothing</li>
             <li>process a single message at a time</li>
           </ul>
         </section>
         <section>
-          <h1>Massage</h1>
+          <h2>Actor is an modern alternative to what is already known</h2>
+        </section>
+        <section>
+          <h2>Massage</h2>
           <ul>
             <li>should have good name and rich semantic and domain specific meaning</li>
             <li>must be immutable</li>
           </ul>
         </section>
         <section>
-          <h1>Our messages</h1>
+          <h2>Our messages</h2>
           <ul>
             <li><code>WhoToGreet</code> - redefines the new greeting</li>
             <li><code>Greet </code> - asks the Actor for latest greeting</li>
@@ -81,7 +140,7 @@
           </ul>
         </section>
         <section>
-          <h1>Messages in Java</h1>
+          <h2>Messages in Java</h2>
           <pre><code data-trim class="java">
 public static class Greet implements Serializable {}
 
@@ -101,7 +160,7 @@ public static class Greeting implements Serializable {
           </code></pre>
         </section>
         <section>
-          <h1>Messages in Scala</h1>
+          <h2>Messages in Scala</h2>
           <pre><code data-trim class="scala">
 case object Greet
 case class WhoToGreet(who: String)
@@ -109,7 +168,7 @@ case class Greeting(message: String)
           </code></pre>
         </section>
         <section>
-          <h1>Actor in Java</h1>
+          <h2>Actor in Java</h2>
           <ul>
             <li>extends <code>UntypedActor</code></li>
             <li>implement <code>onReceive</code> method</li>
@@ -131,7 +190,7 @@ public static class Greeter extends UntypedActor {
           </code></pre>
         </section>
         <section>
-          <h1>Actor in Scala</h1>
+          <h2>Actor in Scala</h2>
           <ul>
             <li>extends <code>Actor</code></li>
             <li>implement <code>receive</code> method</li>
@@ -148,7 +207,7 @@ class Greeter extends Actor {
           </code></pre>
         </section>
         <section>
-          <h1>Create Actor</h1>
+          <h2>Create Actor</h2>
           <ul>
             <li>can't create instance of Actor using <code>new</code></li>
             <li>create Actor using <code>ActorSystem.actorOf</code> factory method<small>it return ActorRef pointing to Actor instance</small></li>
@@ -172,10 +231,18 @@ val greeter = system.actorOf(Props[Greeter], "greeter")
           </code></pre>
         </section>
         <section>
-          <h1>Send Message to Actor</h1>
+          <h2>Send Message to Actor</h2>
           <ul>
             <li>pass message into <code>tell</code> method on <code>ActorRef</code><small>this put message on the actor's mailbox</small></li>
             <li>actor's mailbox is essentially a message queue <small>ordering of multiple messages sent from the same Actor is preserved</small></li>
+          </ul>
+        </section>
+        <section>
+          <h2>Delivery strategies</h2>
+          <ul>
+            <li>at-most-once</li>
+            <li>at-least-once</li>
+            <li>exactly-once</li>
           </ul>
         </section>
         <section>
@@ -191,7 +258,7 @@ greeter ! WhoToGreet("akka")
           </code></pre>
         </section>
         <section>
-          <h1>Replying to an Actor</h1> 
+          <h2>Replying to an Actor</h2> 
           <ul>
             <li>request-replay style of communication</li>
             <li>we need reference to sender</li>
@@ -200,7 +267,7 @@ greeter ! WhoToGreet("akka")
           </ul>
         </section>
         <section>
-          <h1>The 'self' reference</h1>
+          <h2>The 'self' reference</h2>
           <p>reference to your own <code>ActorRef</code></p>
           <p>Java</p>
           <pre><code data-trim class="java">
@@ -216,7 +283,7 @@ greeter ! Greet
           </code></pre>
         </section>
         <section>
-          <h1>The 'sender' reference</h1>
+          <h2>The 'sender' reference</h2>
           <ul>
             <li>will be available in the receiver Actor when it's processing the message</li>
             <li>each message is paired with its unique sender reference</li>
@@ -234,7 +301,7 @@ sender() ! Greeting(greeting)
           </code></pre>
         </section>
         <section>
-          <h1>Inbox</h1>
+          <h2>Inbox</h2>
           <ul>
             <li>allows you to create an "actor-in-a-box" <small>contains an Actor which can be used as a puppet for sending messages to other Actors and receiving their replies</small></li>
             <li>create an <code>Inbox</code> using <code>Inbox.create</code></li>
@@ -244,7 +311,7 @@ sender() ! Greeting(greeting)
           </ul>
         </section>
         <section>
-          <h1>Inbox in Java</h1>
+          <h2>Inbox in Java</h2>
           <pre><code data-trim class="java">
 // Create an "actor-in-a-box"
 final Inbox inbox = Inbox.create(system);
@@ -261,7 +328,7 @@ Greeting greeting = (Greeting) inbox.receive(Duration.create(5, "seconds"));
 System.out.println("Greeting: " + greeting.message);</code></pre>
         </section>
         <section>
-          <h1>Inbox in Scala</h1>
+          <h2>Inbox in Scala</h2>
           <pre><code data-trim class="scala">
 // Create an "actor-in-a-box"
 val inbox = Inbox.create(system)
@@ -279,7 +346,47 @@ println(s"Greeting: $message")
           </code></pre>
         </section>
         <section>
-          <h1>What next ?</h1>
+          <section>
+            <h2>Router strategies</h2>
+            <ul>
+              <li>Random</li>
+              <li>Broadcast</li>
+              <li>RoundRobin</li>
+              <li>ScatterGatherFirstCompleted</li>
+              <li>SmallestMailbox</li>
+              <li>ConsistentHash</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Random</h2>
+            <img src="images/random.png">
+          </section>
+          <section>
+            <h2>Broadcast</h2>
+            <img src="images/broadcast.png">
+          </section>
+          <section>
+            <h2>RoundRobin</h2>
+            <img src="images/roundRobin.png">
+          </section>
+          <section>
+            <h2>ScatterGatherFirstCompleted</h2>
+            <img src="images/scatterGatherFirstCompleted.png">
+          </section>
+          <section>
+            <h2>SmallestMailbox</h2>
+            <img src="images/smallestMailbox.png">
+          </section>
+          <section>
+            <h2>ConsistentHash</h2>
+            <p><small>uses consistent hashing to select a connection based on the sent message</small></p>
+            <img src="images/consistentHash.png">
+            <br>
+            <img src="images/consistentHash2.png">
+          </section>
+        </section>
+        <section>
+          <h2>What next ?</h2>
           <ul>
             <li>Akka Streams</li>
             <li>Akka Http</li>
@@ -290,9 +397,10 @@ println(s"Greeting: $message")
         <section data-background-image="images/end.jpg">
         </section>
         <section>
-          <h1>Based on</h1>
+          <h2>Based on</h2>
           <ul>
             <li>http://www.typesafe.com/activator/template/hello-akka</li>
+            <li>http://getakka.net/docs/Routing</li>
             <li>http://akka.io</li>
             <li>Akka in Action</li>
           </ul>
