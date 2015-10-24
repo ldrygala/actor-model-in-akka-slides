@@ -386,6 +386,37 @@ println(s"Greeting: $message")
           </section>
         </section>
         <section>
+          <section>
+            <h2>Supervision</h2>
+            <h4>Top-Level Supervisors</h4>
+            <img src="images/topLevelSupervisiors.png">
+            <br>
+            <h4>Supervision strategies</h4>
+            <ul>
+              <li>One-For-One Strategy</li>
+              <li>All-For-One Strategy</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Supervisor options</h2>
+            <ul>
+              <li>Resume the subordinate <small>keeping accumulated internal state</small></li>
+              <li>Restart the subordinate <small>clearing out accumulated internal state</small></li>
+              <li>Stop the subordinate</li>
+              <li>Escalate the failure</li>
+            </ul>
+          </section>
+          <section>
+            <h2>Default Supervisor Strategy</h2>
+            <ul>
+              <li><code>ActorInitializationException</code> <small>will stop the failing child actor</small></li>
+              <li><code>ActorKilledException</code> <small>will stop the failing child actor</small></li>
+              <li><code>Exception</code> <small>will restart the failing child actor</small></li>
+              <li>Other <code>Throwable</code> <small>will escalate to parent actor</small></li>
+            </ul>
+          </section>
+        </section>
+        <section>
           <h2>What next ?</h2>
           <ul>
             <li>Akka Streams</li>
@@ -400,7 +431,7 @@ println(s"Greeting: $message")
           <h2>Based on</h2>
           <ul>
             <li>http://www.typesafe.com/activator/template/hello-akka</li>
-            <li>http://getakka.net/docs/Routing</li>
+            <li>http://getakka.net/docs/Reouting</li>
             <li>http://akka.io</li>
             <li>Akka in Action</li>
           </ul>
