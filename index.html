@@ -38,21 +38,80 @@
           <h2>Robert Buchalski</h2>
           <h2>Łukasz Drygała</h2>
         </section>
-        <section>
-          <h2>Concurrency is applied in almost all business areas</h2>
+		<section>
+          <img src="images/1_timeout_slide.png" style="border:none; box-shadow:none;">
+        </section>
+		<section>
+          <img src="images/2_inspect_and_adapt.png" style="border:none; box-shadow:none;">
+        </section>
+		<section>
+          <h2>Inspect</h2>
+          <img src="images/3_inspect.png" style="border:none; box-shadow:none;">
+        </section>
+		<section>
+          <h2>Performance "Big picture"</h2>
+          <img src="images/4_performance_big_picture.png" style="border:none; box-shadow:none;">
         </section>
         <section>
-          <h2>Technical Areas</h2>
+          <h2>Adapt techniques</h2>
           <div id="box">
             <ul>
               <li>scale out (scale horizontally) - more nodes to a system, such as adding a new computer to a distributed software application</li>
               <li>scale up (scale vertically) - add resources to a single node in a system, typically involving the addition of CPUs or memory to a single computer</li>
-              <li>fault tolerance / SLA</li>
             </ul>
           </div>
         </section>
+		<section>
+          <h2>Actor Model</h2>
+            <ul>
+              <li>defined in the 1963 paper by Carl Hewitt <small>popularized by the Erlang language</small><small>Ericsson build highly concurrent and extremely reliable (99.9999999 % availability – 31 ms/year downtime) telecom systems based on actor model</small></li>
+            </ul>
+        </section>
         <section>
-          <h2>Business Areas</h2>
+          <h2>Actor</h2>
+          <ul>
+            <li>encapsulate the behavior and state</li>
+            <li>are location transparent &amp; distributable</li>
+            <li>never interact directly with each other<small>communicate via messages</small></li>
+            <li>share nothing</li>
+            <li>process a single message at a time</li>
+          </ul>
+        </section>
+        <section>
+          <h2>Actor is an modern alternative to what is already known</h2>
+        </section>
+        <section>
+          <h2>Message</h2>
+          <ul>
+            <li>should have good name and rich semantic and domain specific meaning</li>
+            <li>must be immutable</li>
+          </ul>
+        </section>
+		<section>
+          <h2>Actor model abstraction</h2>
+		  <img src="images/X_actor_model_in_akka.png" style="border:none; box-shadow:none;">
+        </section>
+		<section>
+          <h2>Sample actor patterns</h2>
+        </section>
+		<section>
+          <h2>Router</h2>
+		  <img src="images/X_actor_router.PNG" style="border:none; box-shadow:none;">
+        </section>
+		<section>
+          <h2>Domain divide</h2>
+		  <img src="images/X_actor_divide.PNG" style="border:none; box-shadow:none;">
+        </section>
+		<section>
+          <h2>Cache</h2>
+		  <img src="images/X_actor_cache.PNG" style="border:none; box-shadow:none;">
+        </section>
+		<section>
+          <h2>Queue</h2>
+		  <img src="images/X_actor_queue.PNG" style="border:none; box-shadow:none;">
+        </section>
+        <section>
+          <h2>Business Areas (DDD)</h2>
           <div id="box">
             <ul>
               <li>Transaction processing (Online Gaming, Finance/Banking, Trading, Statistics, Searching, Social Meida, Telecom)</li>
@@ -69,33 +128,16 @@
           <h2>Sample problems (solved by Akka)</h2>
           <img src="images/problems.png" style="border:none; box-shadow:none;">
         </section>
-        <section>
-          <h2>The problems can be transformed into parallel form in multiple form</h2>
-          <ul>
-            <li>functional decomposition</li>
-            <ul>
-              <li>like division problems using WBS &amp; OBS</li>
-            </ul>
-            <li>data parallelism</li>
-            <ul>
-              <li>each problems  that are recursive (mathematical induction)</li>
-              <li>divide and conquere</li>
-              <li>sample problems: compression, sorting</li>
-            </ul>
-            <li>task parallelism</li>
-            <ul>
-              <li>regular parallelism (subtask are same)</li>
-              <li>irregular parallelism</li>
-            </ul>
-          </ul>
+		<section>
+          <h2>Actor model is applied in almost all business areas</h2>
         </section>
         <section>
           <h2>Work Breakdown Structure decomposites project into lower level, Organisational Breakdown Structure assign tasks to employees</h2>
           <img src="images/wbs-obs.gif" style="border:none; box-shadow:none;">
         </section>
-        <section>
-          <h2>Concurrency Techniques in practice</h2>
-          <img src="images/mindmap.png" style="border:none; box-shadow:none;">
+		<section>
+          <h2>Real life model</h2>
+          <img src="images/X_corporation_model.PNG" style="border:none; box-shadow:none;">
         </section>
         <section>
           <img src="images/akka_logo.png" style="border:none; box-shadow:none;">
@@ -103,32 +145,6 @@
             <li>toolkit for building highly concurrent, distributed, and fault-tolerant event-driven applications</li>
             <li>can be used with both Java and Scala</li>
             <li>most powerful features of Akka is its Actor Model of concurrency</li>
-          </ul>
-        </section>
-        <section>
-          <h2>Actor Model</h2>
-            <ul>
-              <li>defined in the 1963 paper by Carl Hewitt <small>popularized by the Erlang language</small><small>Ericsson build highly concurrent and extremely reliable (99.9999999 % availability – 31 ms/year downtime) telecom systems based on actor model</small></li>
-            </ul>
-        </section>
-        <section>
-          <h2>Actor in Akka</h2>
-          <ul>
-            <li>encapsulate the behavior and state</li>
-            <li>are location transparent &amp; distributable</li>
-            <li>never interact directly with each other<small>communicate via messages</small></li>
-            <li>share nothing</li>
-            <li>process a single message at a time</li>
-          </ul>
-        </section>
-        <section>
-          <h2>Actor is an modern alternative to what is already known</h2>
-        </section>
-        <section>
-          <h2>Massage</h2>
-          <ul>
-            <li>should have good name and rich semantic and domain specific meaning</li>
-            <li>must be immutable</li>
           </ul>
         </section>
         <section>
@@ -416,12 +432,17 @@ println(s"Greeting: $message")
             </ul>
           </section>
         </section>
+		<section>
+          <h2>Real case: bank transfer</h2>
+          <img src="images/X_actor_bank.PNG" style="border:none; box-shadow:none;">
+        </section>
         <section>
           <h2>What next ?</h2>
           <ul>
             <li>Akka Streams</li>
             <li>Akka Http</li>
             <li>Akka Persistence</li>
+			<li>Akka Cluster</li>
             <li>Actor Testing</li>
           </ul>
         </section>
@@ -432,6 +453,7 @@ println(s"Greeting: $message")
           <ul>
             <li>http://www.typesafe.com/activator/template/hello-akka</li>
             <li>http://getakka.net/docs/Reouting</li>
+			<li>http://letitcrash.com/</li>
             <li>http://akka.io</li>
             <li>Akka in Action</li>
           </ul>
